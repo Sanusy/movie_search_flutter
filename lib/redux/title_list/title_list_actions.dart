@@ -15,3 +15,14 @@ class TitleClickedAction {
 
   TitleClickedAction(this.titleId);
 }
+
+class UpdateQueryAction {
+  final String query;
+
+  UpdateQueryAction(this.query);
+}
+
+class PerformQueryAction {}
+class ClearSearchAction {}
+class OpenSearchAction {}
+class CloseSearchAction {}
