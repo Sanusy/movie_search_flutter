@@ -17,14 +17,12 @@ class TitleListScreen extends StatelessWidget {
         converter: (Store<AppState> store) {
           var titleListState = store.state.titleListState;
           return titleListState.isLoading
-              ? TitleListLoading()
+              ? TitleListLoading.create(store)
               : TitleListLoaded.create(store);
         },
         builder: (BuildContext context, TitleListViewModel viewModel) =>
             Scaffold(
-                appBar: AppBar(
-                  title: const Text('MovieList'),
-                ),
+                appBar: _buildAppBar(viewModel),
                 body: _buildTitleList(context, viewModel)));
   }
 
@@ -65,12 +63,21 @@ class TitleListScreen extends StatelessWidget {
                   children: [
                     Text(
                       title.title,
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .subtitle1,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(title.year),
-                    )
+                    if(title.year != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(title.year!),
+                      ),
+                    if(title.type != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(title.type!),
+                      )
                   ],
                 ),
               ),
@@ -81,7 +88,49 @@ class TitleListScreen extends StatelessWidget {
     );
   }
 
-  void navigateToTitleDetails(BuildContext context, String titleId) {
-    Navigator.of(context).pushNamed('/movieDetails/$titleId');
+  PreferredSizeWidget _buildAppBar(TitleListViewModel viewModel) {
+    var textInputController = TextEditingController();
+    textInputController.text = viewModel.searchQuery;
+    textInputController.selection = TextSelection.fromPosition(
+        TextPosition(offset: viewModel.searchQuery.length));
+
+    var leading = viewModel.searchActive
+        ? IconButton(
+        onPressed: viewModel.closeSearch,
+        icon: const Icon(Icons.arrow_back_outlined))
+        : null;
+
+    var title = viewModel.searchActive
+        ? TextField(
+      cursorColor: Colors.white,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+      textInputAction: TextInputAction.search,
+      onChanged: viewModel.updateQuery,
+      onSubmitted: (_) => viewModel.performQuery(),
+      controller: textInputController,
+      decoration: const InputDecoration(
+          hintText: 'Search',
+          hintStyle: TextStyle(
+            color: Colors.white38,
+          )
+      ),
+    )
+        : const Text('MovieSearch');
+
+    var action = viewModel.searchActive && viewModel.searchQuery.isNotEmpty
+        ? IconButton(
+        onPressed: viewModel.clearQuery, icon: const Icon(Icons.close))
+        : !viewModel.searchActive
+        ? IconButton(
+        onPressed: viewModel.openSearch, icon: const Icon(Icons.search))
+        : null;
+
+    return AppBar(
+      leading: leading,
+      title: title,
+      actions: action != null ? [action] : null,
+    );
   }
 }
