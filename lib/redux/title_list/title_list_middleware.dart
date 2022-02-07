@@ -30,6 +30,16 @@ class TitleListMiddleware extends MiddlewareClass<AppState> {
         rawMovieList.map((tagJson) => TitleData.fromJson(tagJson)).toList();
         store.dispatch(TitleListLoadedAction(titleList));
       }
+    } else if(action is SelectFilterAction) {
+      var response = await http.get(
+          Uri.parse('https://imdb-api.com/en/API/${action.filter.searchFilter}/k_956nmhwo'));
+
+      if (response.statusCode == 200) {
+        var rawMovieList = jsonDecode(response.body)['items'] as List;
+        var titleList =
+        rawMovieList.map((tagJson) => TitleData.fromJson(tagJson)).toList();
+        store.dispatch(TitleListLoadedAction(titleList));
+      }
     }
   }
 }

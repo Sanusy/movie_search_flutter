@@ -10,6 +10,7 @@ Reducer<TitleListState> titleListReducer = combineReducers<TitleListState>([
   TypedReducer(_clearSearch),
   TypedReducer(_closeSearch),
   TypedReducer(_openSearch),
+  TypedReducer(_selectFilter),
 ]);
 
 TitleListState _loadTitleList(
@@ -33,6 +34,7 @@ TitleListState _performQuery(TitleListState state, PerformQueryAction action) =>
     state.copy(
       isLoading: true,
       titleList: List.unmodifiable([]),
+      activeFilter: None(),
     );
 
 TitleListState _clearSearch(TitleListState state, ClearSearchAction action) =>
@@ -43,3 +45,11 @@ TitleListState _closeSearch(TitleListState state, CloseSearchAction action) =>
 
 TitleListState _openSearch(TitleListState state, OpenSearchAction action) =>
     state.copy(searchActive: true);
+
+TitleListState _selectFilter(TitleListState state, SelectFilterAction action) =>
+    state.copy(
+      isLoading: true,
+      activeFilter: action.filter,
+      searchQuery: '',
+      searchActive: false,
+    );
