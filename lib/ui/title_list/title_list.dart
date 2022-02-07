@@ -6,7 +6,9 @@ import 'package:movie_search/ui/title_list/title_list_view_model.dart';
 import 'package:redux/redux.dart';
 
 class TitleListScreen extends StatelessWidget {
-  const TitleListScreen({Key? key}) : super(key: key);
+  TitleListScreen({Key? key}) : super(key: key);
+
+  final _searchTextInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +122,10 @@ class TitleListScreen extends StatelessWidget {
   }
 
   PreferredSizeWidget _buildAppBar(TitleListAppBar appBar) {
-    var textInputController = TextEditingController();
-    textInputController.text = appBar.searchQuery;
-    textInputController.selection = TextSelection.fromPosition(
-        TextPosition(offset: appBar.searchQuery.length));
+
+    if(appBar.searchQuery.isEmpty) {
+      _searchTextInputController.clear();
+    }
 
     var leading = appBar.searchActive
         ? IconButton(
@@ -140,7 +142,7 @@ class TitleListScreen extends StatelessWidget {
             textInputAction: TextInputAction.search,
             onChanged: appBar.updateQuery,
             onSubmitted: (_) => appBar.performQuery(),
-            controller: textInputController,
+            controller: _searchTextInputController,
             decoration: const InputDecoration(
                 hintText: 'Search',
                 hintStyle: TextStyle(

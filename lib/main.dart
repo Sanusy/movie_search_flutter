@@ -8,7 +8,6 @@ import 'package:movie_search/redux/title_list/title_list_middleware.dart';
 import 'package:movie_search/ui/title_details/title_details.dart';
 import 'package:movie_search/ui/title_list/title_list.dart';
 import 'package:redux/redux.dart';
-import 'package:flutter_redux_navigation/src/navigation_holder.dart';
 
 void main() {
   runApp(const MovieSearchApp());
@@ -35,8 +34,7 @@ class MovieSearchApp extends StatelessWidget {
           navigatorKey: NavigatorHolder.navigatorKey,
           onGenerateRoute: (settings) {
             if (settings.name == '/') {
-              return MaterialPageRoute(
-                  builder: (context) => const TitleListScreen());
+              return MaterialPageRoute(builder: (context) => TitleListScreen());
             } else if (settings.name == '/movieDetails') {
               return MaterialPageRoute(
                   builder: (context) => const TitleDetailsScreen());
