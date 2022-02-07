@@ -22,21 +22,55 @@ class TitleListScreen extends StatelessWidget {
         },
         builder: (BuildContext context, TitleListViewModel viewModel) =>
             Scaffold(
-                appBar: _buildAppBar(viewModel),
-                body: _buildTitleList(context, viewModel)));
+                appBar: _buildAppBar(viewModel.appBar),
+                body: Column(
+                  children: [
+                    _buildFilters(viewModel.filters),
+                    _buildTitleList(context, viewModel),
+                  ],
+                )));
+  }
+
+  Widget _buildFilters(TitleListFiltersViewModel filtersViewModel) {
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
+        separatorBuilder: (buildContext, index) => const SizedBox(
+          width: 4,
+        ),
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) =>
+            _buildChip(filtersViewModel.filters[index]),
+        itemCount: filtersViewModel.filters.length,
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+      ),
+    );
+  }
+
+  Widget _buildChip(Filter filter) {
+    return InputChip(
+      label: Text(filter.name),
+      selected: filter.isSelected,
+      isEnabled: !filter.isSelected,
+      onPressed: filter.onClick,
+    );
   }
 
   Widget _buildTitleList(BuildContext context, TitleListViewModel viewModel) {
     if (viewModel is TitleListLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+      return const Expanded(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     } else {
-      var titleListviewModel = viewModel as TitleListLoaded;
-      return ListView.builder(
-        itemCount: titleListviewModel.titleList.length,
-        itemBuilder: (context, itemIndex) =>
-            _buildMovieItem(context, titleListviewModel.titleList[itemIndex]),
+      var titleListViewModel = viewModel as TitleListLoaded;
+      return Expanded(
+        child: ListView.builder(
+          itemCount: titleListViewModel.titleList.length,
+          itemBuilder: (context, itemIndex) =>
+              _buildMovieItem(context, titleListViewModel.titleList[itemIndex]),
+        ),
       );
     }
   }
@@ -63,17 +97,14 @@ class TitleListScreen extends StatelessWidget {
                   children: [
                     Text(
                       title.title,
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .subtitle1,
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
-                    if(title.year != null)
+                    if (title.year != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(title.year!),
                       ),
-                    if(title.type != null)
+                    if (title.type != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(title.type!),
@@ -88,44 +119,43 @@ class TitleListScreen extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(TitleListViewModel viewModel) {
+  PreferredSizeWidget _buildAppBar(TitleListAppBar appBar) {
     var textInputController = TextEditingController();
-    textInputController.text = viewModel.searchQuery;
+    textInputController.text = appBar.searchQuery;
     textInputController.selection = TextSelection.fromPosition(
-        TextPosition(offset: viewModel.searchQuery.length));
+        TextPosition(offset: appBar.searchQuery.length));
 
-    var leading = viewModel.searchActive
+    var leading = appBar.searchActive
         ? IconButton(
-        onPressed: viewModel.closeSearch,
-        icon: const Icon(Icons.arrow_back_outlined))
+            onPressed: appBar.closeSearch,
+            icon: const Icon(Icons.arrow_back_outlined))
         : null;
 
-    var title = viewModel.searchActive
+    var title = appBar.searchActive
         ? TextField(
-      cursorColor: Colors.white,
-      style: const TextStyle(
-        color: Colors.white,
-      ),
-      textInputAction: TextInputAction.search,
-      onChanged: viewModel.updateQuery,
-      onSubmitted: (_) => viewModel.performQuery(),
-      controller: textInputController,
-      decoration: const InputDecoration(
-          hintText: 'Search',
-          hintStyle: TextStyle(
-            color: Colors.white38,
+            cursorColor: Colors.white,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            textInputAction: TextInputAction.search,
+            onChanged: appBar.updateQuery,
+            onSubmitted: (_) => appBar.performQuery(),
+            controller: textInputController,
+            decoration: const InputDecoration(
+                hintText: 'Search',
+                hintStyle: TextStyle(
+                  color: Colors.white38,
+                )),
           )
-      ),
-    )
         : const Text('MovieSearch');
 
-    var action = viewModel.searchActive && viewModel.searchQuery.isNotEmpty
+    var action = appBar.searchActive && appBar.searchQuery.isNotEmpty
         ? IconButton(
-        onPressed: viewModel.clearQuery, icon: const Icon(Icons.close))
-        : !viewModel.searchActive
-        ? IconButton(
-        onPressed: viewModel.openSearch, icon: const Icon(Icons.search))
-        : null;
+            onPressed: appBar.clearQuery, icon: const Icon(Icons.close))
+        : !appBar.searchActive
+            ? IconButton(
+                onPressed: appBar.openSearch, icon: const Icon(Icons.search))
+            : null;
 
     return AppBar(
       leading: leading,
