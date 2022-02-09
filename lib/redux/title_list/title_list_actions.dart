@@ -1,8 +1,6 @@
 import 'package:movie_search/data/title_list.dart';
 import 'package:movie_search/redux/title_list/title_list_state.dart';
 
-class LoadTitleListAction {}
-
 class TitleListLoadedAction {
   final List<TitleData> titleList;
 
@@ -31,8 +29,8 @@ class OpenSearchAction {}
 
 class CloseSearchAction {}
 
-class SelectFilterAction {
-  final TitleListFilter filter;
+class LoadSelectedCategoryAction {
+  final TitleListCategory category;
 
-  SelectFilterAction(this.filter);
+  LoadSelectedCategoryAction(this.category);
 }

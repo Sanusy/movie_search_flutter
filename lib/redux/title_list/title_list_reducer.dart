@@ -3,22 +3,14 @@ import 'package:movie_search/redux/title_list/title_list_state.dart';
 import 'package:redux/redux.dart';
 
 Reducer<TitleListState> titleListReducer = combineReducers<TitleListState>([
-  TypedReducer(_loadTitleList),
   TypedReducer(_titleListLoaded),
   TypedReducer(_updateQuery),
   TypedReducer(_performQuery),
   TypedReducer(_clearSearch),
   TypedReducer(_closeSearch),
   TypedReducer(_openSearch),
-  TypedReducer(_selectFilter),
+  TypedReducer(_selectCategory),
 ]);
-
-TitleListState _loadTitleList(
-        TitleListState state, LoadTitleListAction action) =>
-    state.copy(
-      isLoading: true,
-      titleList: List.unmodifiable([]),
-    );
 
 TitleListState _titleListLoaded(
         TitleListState state, TitleListLoadedAction action) =>
@@ -46,10 +38,12 @@ TitleListState _closeSearch(TitleListState state, CloseSearchAction action) =>
 TitleListState _openSearch(TitleListState state, OpenSearchAction action) =>
     state.copy(searchActive: true);
 
-TitleListState _selectFilter(TitleListState state, SelectFilterAction action) =>
+TitleListState _selectCategory(
+        TitleListState state, LoadSelectedCategoryAction action) =>
     state.copy(
       isLoading: true,
-      activeFilter: action.filter,
+      activeFilter: action.category,
       searchQuery: '',
       searchActive: false,
+      titleList: List.unmodifiable([]),
     );

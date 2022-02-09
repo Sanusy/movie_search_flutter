@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:movie_search/redux/state.dart';
 import 'package:movie_search/redux/title_list/title_list_actions.dart';
+import 'package:movie_search/redux/title_list/title_list_state.dart';
 import 'package:movie_search/ui/title_list/title_list_view_model.dart';
 import 'package:redux/redux.dart';
 
@@ -14,7 +15,7 @@ class TitleListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector(
         onInit: (store) {
-          store.dispatch(LoadTitleListAction());
+          store.dispatch(LoadSelectedCategoryAction(Top250Series()));
         },
         converter: (Store<AppState> store) {
           var titleListState = store.state.titleListState;
@@ -27,13 +28,13 @@ class TitleListScreen extends StatelessWidget {
                 appBar: _buildAppBar(viewModel.appBar),
                 body: Column(
                   children: [
-                    _buildFilters(viewModel.filters),
+                    _buildFilters(viewModel.category),
                     _buildTitleList(context, viewModel),
                   ],
                 )));
   }
 
-  Widget _buildFilters(TitleListFiltersViewModel filtersViewModel) {
+  Widget _buildFilters(TitleListCategoryViewModel filtersViewModel) {
     return SizedBox(
       height: 40,
       child: ListView.separated(
