@@ -8,24 +8,24 @@ import 'package:redux/redux.dart';
 abstract class TitleListViewModel {
   TitleListAppBar get appBar;
 
-  TitleListFiltersViewModel get filters;
+  TitleListCategoryViewModel get category;
 }
 
 class TitleListLoading extends TitleListViewModel {
   @override
-  final TitleListFiltersViewModel filters;
+  final TitleListCategoryViewModel category;
 
   @override
   final TitleListAppBar appBar;
 
   TitleListLoading._(
-    this.filters,
+    this.category,
     this.appBar,
   );
 
   factory TitleListLoading.create(Store<AppState> store) {
     return TitleListLoading._(
-        TitleListFiltersViewModel.create(store), TitleListAppBar.create(store));
+        TitleListCategoryViewModel.create(store), TitleListAppBar.create(store));
   }
 }
 
@@ -36,12 +36,12 @@ class TitleListLoaded extends TitleListViewModel {
   final TitleListAppBar appBar;
 
   @override
-  final TitleListFiltersViewModel filters;
+  final TitleListCategoryViewModel category;
 
   TitleListLoaded._(
     this.titleList,
     this.appBar,
-    this.filters,
+    this.category,
   );
 
   factory TitleListLoaded.create(Store<AppState> store) {
@@ -54,7 +54,7 @@ class TitleListLoaded extends TitleListViewModel {
                 store.dispatch(OpenTitleDetailsAction(e.id));
               }))),
       TitleListAppBar.create(store),
-      TitleListFiltersViewModel.create(store),
+      TitleListCategoryViewModel.create(store),
     );
   }
 }
@@ -110,38 +110,38 @@ class TitleListAppBar {
   }
 }
 
-class TitleListFiltersViewModel {
+class TitleListCategoryViewModel {
   final List<Filter> filters;
 
-  TitleListFiltersViewModel._(this.filters);
+  TitleListCategoryViewModel._(this.filters);
 
-  factory TitleListFiltersViewModel.create(Store<AppState> store) {
-    var selectedFilter = store.state.titleListState.activeFilter;
-    return TitleListFiltersViewModel._(List.unmodifiable([
+  factory TitleListCategoryViewModel.create(Store<AppState> store) {
+    var selectedFilter = store.state.titleListState.activeCategory;
+    return TitleListCategoryViewModel._(List.unmodifiable([
       Filter(
           name: 'Top 250 Movies',
           isSelected: selectedFilter is Top250Movies,
-          onClick: () => store.dispatch(SelectFilterAction(Top250Movies()))),
+          onClick: () => store.dispatch(LoadSelectedCategoryAction(Top250Movies()))),
       Filter(
           name: 'Top 250 Series',
           isSelected: selectedFilter is Top250Series,
-          onClick: () => store.dispatch(SelectFilterAction(Top250Series()))),
+          onClick: () => store.dispatch(LoadSelectedCategoryAction(Top250Series()))),
       Filter(
           name: 'Most Popular Movies',
           isSelected: selectedFilter is MostPopularMovies,
-          onClick: () => store.dispatch(SelectFilterAction(MostPopularMovies()))),
+          onClick: () => store.dispatch(LoadSelectedCategoryAction(MostPopularMovies()))),
       Filter(
           name: 'Most Popular Series',
           isSelected: selectedFilter is MostPopularTVs,
-          onClick: () => store.dispatch(SelectFilterAction(MostPopularTVs()))),
+          onClick: () => store.dispatch(LoadSelectedCategoryAction(MostPopularTVs()))),
       Filter(
           name: 'Coming Soon',
           isSelected: selectedFilter is ComingSoon,
-          onClick: () => store.dispatch(SelectFilterAction(ComingSoon()))),
+          onClick: () => store.dispatch(LoadSelectedCategoryAction(ComingSoon()))),
       Filter(
           name: 'In Theaters',
           isSelected: selectedFilter is InTheaters,
-          onClick: () => store.dispatch(SelectFilterAction(InTheaters()))),
+          onClick: () => store.dispatch(LoadSelectedCategoryAction(InTheaters()))),
     ]));
   }
 }

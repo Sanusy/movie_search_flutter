@@ -1,3 +1,27 @@
+class TitleListByCategoryDto {
+  final List<TitleData> items;
+
+  const TitleListByCategoryDto(this.items);
+
+  factory TitleListByCategoryDto.fromJson(Map<String, dynamic> json) {
+    var list = json['items'] as List;
+    List<TitleData> items = list.map((i) => TitleData.fromJson(i)).toList();
+    return TitleListByCategoryDto(items);
+  }
+}
+
+class TitleListByQueryDto {
+  final List<TitleData> results;
+
+  const TitleListByQueryDto(this.results);
+
+  factory TitleListByQueryDto.fromJson(Map<String, dynamic> json) {
+    var list = json['results'] as List;
+    List<TitleData> items = list.map((i) => TitleData.fromJson(i)).toList();
+    return TitleListByQueryDto(items);
+  }
+}
+
 class TitleData {
   final String id;
   final String title;

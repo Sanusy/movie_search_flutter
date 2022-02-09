@@ -5,14 +5,14 @@ class TitleListState {
   final List<TitleData> titleList;
   final bool searchActive;
   final String searchQuery;
-  final TitleListFilter activeFilter;
+  final TitleListCategory activeCategory;
 
   TitleListState({
     required this.isLoading,
     required this.titleList,
     required this.searchActive,
     required this.searchQuery,
-    required this.activeFilter,
+    required this.activeCategory,
   });
 
   TitleListState.initial()
@@ -20,60 +20,60 @@ class TitleListState {
         titleList = List.unmodifiable([]),
         searchActive = false,
         searchQuery = '',
-        activeFilter = Top250Movies();
+        activeCategory = None();
 
   TitleListState copy({
     bool? isLoading,
     List<TitleData>? titleList,
     bool? searchActive,
     String? searchQuery,
-    TitleListFilter? activeFilter,
+    TitleListCategory? activeFilter,
   }) {
     return TitleListState(
       titleList: titleList ?? this.titleList,
       isLoading: isLoading ?? this.isLoading,
       searchActive: searchActive ?? this.searchActive,
       searchQuery: searchQuery ?? this.searchQuery,
-      activeFilter: activeFilter ?? this.activeFilter,
+      activeCategory: activeFilter ?? this.activeCategory,
     );
   }
 }
 
-abstract class TitleListFilter {
+abstract class TitleListCategory {
   String get searchFilter;
 }
 
-class None extends TitleListFilter {
+class None extends TitleListCategory {
   @override
   String get searchFilter => '';
 }
 
-class Top250Movies extends TitleListFilter {
+class Top250Movies extends TitleListCategory {
   @override
   String get searchFilter => 'Top250Movies';
 }
 
-class Top250Series extends TitleListFilter {
+class Top250Series extends TitleListCategory {
   @override
   String get searchFilter => 'Top250TVs';
 }
 
-class MostPopularMovies extends TitleListFilter {
+class MostPopularMovies extends TitleListCategory {
   @override
   String get searchFilter => 'MostPopularMovies';
 }
 
-class MostPopularTVs extends TitleListFilter {
+class MostPopularTVs extends TitleListCategory {
   @override
   String get searchFilter => 'MostPopularTVs';
 }
 
-class ComingSoon extends TitleListFilter {
+class ComingSoon extends TitleListCategory {
   @override
   String get searchFilter => 'ComingSoon';
 }
 
-class InTheaters extends TitleListFilter {
+class InTheaters extends TitleListCategory {
   @override
   String get searchFilter => 'InTheaters';
 }
